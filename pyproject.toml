@@ -1,0 +1,17 @@
+[tool.poetry]
+name = "skypro-yd-cw3"
+version = "0.1.0"
+description = ""
+authors = ["Yukimokki <yana.domnina@gmail.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+
+
+[tool.poetry.group.dev.dependencies]
+pytest = "^8.2.1"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"
