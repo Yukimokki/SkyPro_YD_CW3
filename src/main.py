@@ -14,4 +14,4 @@ def main():
         {trans_from} -> {trans_to}
         {operation['summ']} {operation['currency']}""")
 
-main()
+#main()

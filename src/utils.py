@@ -5,7 +5,7 @@ def trans_load(num_operations):
     """
     загружает банковский отчет и выбирает 5 последних успешных операции
     """
-    with open('operations.json', 'r', encoding='utf-8') as file:
+    with open("operations.json", 'r', encoding='utf-8') as file:
         trans_list = [x for x in json.load(file) if x and x["state"] == "EXECUTED"]
         trans_list.sort(key=lambda k: str(k.get('date')), reverse=True)
         return trans_list[0:int(num_operations)]
@@ -31,7 +31,7 @@ def trans_dict_format_card(card_number):
     """
     форматирует номер карты
     """
-    card_number_list = (card_number[:-12:1], " ", card_number[-12:-10:1], "** **** ", card_number[-5:-1:1])
+    card_number_list = (card_number[:-12:1], " ", card_number[-12:-10:1], "** **** ", card_number[-4::1])
     card_number_format = "".join(card_number_list)
     return card_number_format
 
@@ -84,3 +84,4 @@ def trans_printout():
     * не выполнена
     """
     pass
+
