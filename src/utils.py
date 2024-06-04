@@ -1,22 +1,39 @@
 import json
+import os
 
 
-def trans_load(num_operations):
+def trans_load(filepath):
     """
     загружает банковский отчет и выбирает 5 последних успешных операции
     """
-    with open("operations.json", 'r', encoding='utf-8') as file:
-        trans_list = [x for x in json.load(file) if x and x["state"] == "EXECUTED"]
-        trans_list.sort(key=lambda k: str(k.get('date')), reverse=True)
-        return trans_list[0:int(num_operations)]
+    with open(filepath, 'r', encoding='utf-8') as file:
+        trans_list_raw = json.load(file)
+    return trans_list_raw
 
 
-def trans_dict(operations_list):
+def trans_filter(trans_list_raw, status):
+    """
+    фильтрует успешные операции
+    """
+    trans_list_filt = [x for x in trans_list_raw if x and x["state"] == status]
+    return trans_list_filt
+
+
+def trans_sort(trans_list_filt,sorted):
+    """
+    сортирует по датам и выбирает 5 последних операций
+    """
+    trans_list_filt.sort(key=lambda k: str(k.get(sorted)), reverse=True)
+    #trans_list_sort = trans_list_filt[0:int(num_operations)]
+    return trans_list_filt
+
+
+def trans_dict(trans_list_sort):
     """
    выбирает нужные значения для формирования выписки
    """
 
-    transactions = operations_list
+    transactions = trans_list_sort
     trans_list_items = []
     for trans in transactions:
         transaction = {"state": trans["state"], "date": trans["date"], "description": trans['description'],
@@ -36,28 +53,18 @@ def trans_dict_format_card(card_number):
     return card_number_format
 
 
-def origin_format(origin):
+def hide_requisites(origin):
     """
     выбирает функцию форматирования просихождения операции
     """
-    if origin and origin[0:4] == 'Счет':
-        trans_from = trans_dict_format_acc(origin)
-    elif origin and origin[0:4] != 'Счет':
-        trans_from = trans_dict_format_card(origin)
-    elif origin == None:
-        trans_from = 'Нет'
-    return trans_from
+    if not origin:
+        return "Нет"
+    if origin.lower().startswith('счет'):
+        hidden_requisites = trans_dict_format_acc(origin)
+    else:
+        hidden_requisites = trans_dict_format_card(origin)
 
-
-def dest_format(destination):
-    """
-    выбирает функцию для форматирования назначения операции
-    """
-    if destination[0:4] == 'Счет':
-        trans_to = trans_dict_format_acc(destination)
-    elif destination[0:4] != 'Счет':
-        trans_to = trans_dict_format_card(destination)
-    return trans_to
+    return hidden_requisites
 
 
 def trans_dict_format_acc(account):
@@ -76,12 +83,3 @@ def trans_dict_format_date(trans_date):
     date_list = [date_items[2], date_items[1], date_items[0]]
     date_format = ".".join(date_list)
     return date_format
-
-
-def trans_printout():
-    """
-    выполняет печатть необходимого числа транзакций
-    * не выполнена
-    """
-    pass
-
