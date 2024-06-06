@@ -1,27 +1,52 @@
-from src.utils import *
+from src.utils import trans_load, trans_filter, trans_sort, trans_dict_format_date,\
+    trans_hide_account, trans_hide_card_number, hide_requisites
 import os
+
+#TEST_DATA_PATH = os.path.join(os.path.dirname(__file__), 'test_operations.json')
 
 def test_load():
     TEST_DATA_PATH = os.path.join(os.path.dirname(__file__),'test_operations.json')
-    assert trans_load(TEST_DATA_PATH) == [{"state": "executed", "date": "15.11.2024"},{"state": "executed", "date": "10.10.2024"}, {"state": "canceled", "date": "15.11.2022"}]
+    assert trans_load(TEST_DATA_PATH) == [
+        {"state": "executed", "date": "2024-11-15"},
+        {"state": "executed", "date": "2024-10-10"},
+        {"state": "canceled", "date": "2022-11-15"}
+    ]
+
 
 def test_filt():
-    assert trans_filter([{"state": "executed", "date": "15.11.2024"},{"state": "executed", "date": "10.10.2024"}, {"state": "canceled", "date": "15.11.2022"}], 'executed') == \
-           [{"state": "executed", "date": "15.11.2024"}, {"state": "executed", "date": "10.10.2024"},]
+    data = [
+        {"state": "executed", "date": "2024-11-15"},
+        {"state": "executed", "date": "2024-10-10"},
+        {"state": "canceled", "date": "2022-11-15"}
+    ]
+
+    expected = [
+        {"state": "executed", "date": "2024-11-15"},
+        {"state": "executed", "date": "2024-10-10"}
+    ]
+
+    assert trans_filter(data, 'executed') == expected
 
 
 def test_sort():
-    assert trans_sort([{"state": "executed", "date": "15.11.2024"}, {"state": "executed", "date": "10.10.2024"}], 'date') == \
-            [{"state": "executed", "date": "15.11.2024"}, {"state": "executed", "date": "10.10.2024"}]
+    data = [
+        {"state": "executed", "date": "2024-11-15"},
+        {"state": "executed", "date": "2024-10-10"}
+    ]
+    expected = [
+        {"state": "executed", "date": "2024-11-15"},
+        {"state": "executed", "date": "2024-10-10"}
+    ]
+    assert trans_sort(data, 'date') == expected
 
 def test_date():
     assert trans_dict_format_date('2019-12-08T22:46:21.935582') == '08.12.2019'
 
 def test_acc():
-    assert trans_dict_format_acc('Счет 90424923579946435907') == 'Счет **5907'
+    assert trans_hide_account('Счет 90424923579946435907') == 'Счет **5907'
 
 def test_card():
-    assert trans_dict_format_card('Visa Classic 2842878893689012') == 'Visa Classic 2842 87** **** 9012'
+    assert trans_hide_card_number('Visa Classic 2842878893689012') == 'Visa Classic 2842 87** **** 9012'
 
 def test_hide_requisites():
     assert hide_requisites('') == 'Нет'

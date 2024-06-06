@@ -19,11 +19,11 @@ def trans_filter(trans_list_raw, status):
     return trans_list_filt
 
 
-def trans_sort(trans_list_filt,sorted):
+def trans_sort(trans_list_filt,sort_on):
     """
     сортирует по датам и выбирает 5 последних операций
     """
-    trans_list_filt.sort(key=lambda k: str(k.get(sorted)), reverse=True)
+    trans_list_filt.sort(key=lambda k: str(k.get(sort_on)), reverse=True)
     #trans_list_sort = trans_list_filt[0:int(num_operations)]
     return trans_list_filt
 
@@ -44,7 +44,7 @@ def trans_dict(trans_list_sort):
     return trans_list_items
 
 
-def trans_dict_format_card(card_number):
+def trans_hide_card_number(card_number):
     """
     форматирует номер карты
     """
@@ -60,14 +60,14 @@ def hide_requisites(origin):
     if not origin:
         return "Нет"
     if origin.lower().startswith('счет'):
-        hidden_requisites = trans_dict_format_acc(origin)
+        hidden_requisites = trans_hide_account(origin)
     else:
-        hidden_requisites = trans_dict_format_card(origin)
+        hidden_requisites = trans_hide_card_number(origin)
 
     return hidden_requisites
 
 
-def trans_dict_format_acc(account):
+def trans_hide_account(account):
     """
     форматирует значения номера счёта
     """
