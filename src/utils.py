@@ -46,7 +46,7 @@ def trans_dict(trans_list_sort):
 
 def trans_hide_card_number(card_number):
     """
-    форматирует номер карты
+    скрывает номер карты
     """
     card_number_list = (card_number[:-12:1], " ", card_number[-12:-10:1], "** **** ", card_number[-4::1])
     card_number_format = "".join(card_number_list)
@@ -55,7 +55,7 @@ def trans_hide_card_number(card_number):
 
 def hide_requisites(origin):
     """
-    выбирает функцию форматирования просихождения операции
+    выбирает функцию сокрытия номера карты или счета
     """
     if not origin:
         return "Нет"
@@ -69,7 +69,7 @@ def hide_requisites(origin):
 
 def trans_hide_account(account):
     """
-    форматирует значения номера счёта
+    скрывает номер счёта
     """
     return 'Счет **' + account[-4:]
 
